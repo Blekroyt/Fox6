@@ -125,5 +125,6 @@ while True:
         help()
     else:
         print("Неизвестная команда {command}", file=sys.stderr)
+        
 if __name__ == "__main__":
     main()
