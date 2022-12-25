@@ -47,7 +47,7 @@ def display_workers(staff):
             '| {:>4} | {:<30} | {:<20} | {:>8} |'.format(
             idx,
             worker.get('name', ''),
-            worker.get('post', ''),
+            worker.get('tel', ''),
             worker.get('year', 0)
             )
             )
