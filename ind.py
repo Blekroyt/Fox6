@@ -9,20 +9,20 @@ def get_worker():
     Запросить данные о работнике.
     """
     name = input("Фамилия, Имя? ")
-    tel = input("Номер телефона? ")
-    date = int(input("Дата рождения? "))
+    tel = input("Номер? ")
+    year = int(input("Год рождения? "))
     # Создать словарь.
     return {
     'name': name,
-    'tel': post,
-    'date   ': year,
+    'tel': tel,
+    'year': year,
     }
 
 def display_workers(staff):
     """
-    Отобразить список номеров.
+    Отобразить список работников.
     """
-    # Проверить, что список номеров не пуст.
+    # Проверить, что список работников не пуст.
     if staff:
     # Заголовок таблицы.
         line = '+-{}-+-{}-+-{}-+-{}-+'.format(
@@ -36,42 +36,42 @@ def display_workers(staff):
     '| {:^4} | {:^30} | {:^20} | {:^8} |'.format(
     "No",
     "Ф.И.О.",
-    "Номер",
-    "Дата рожддения"
+    "Телефон",
+    "Год"
     )
     )
     print(line)
-    # Вывести данные о всех номерах.
+    # Вывести данные о всех сотрудниках.
     for idx, worker in enumerate(staff, 1):
         print(
             '| {:>4} | {:<30} | {:<20} | {:>8} |'.format(
             idx,
             worker.get('name', ''),
-            worker.get('tel', ''),
-            worker.get('date', 0)
+            worker.get('post', ''),
+            worker.get('year', 0)
             )
             )
         print(line)
     else:
-        print("Список номеров пуст.")
+        print("Список работников пуст.")
 
 def select_workers(staff, period):
     """
-    Выбрать номер с заданным годом рождения.
+    Выбрать работников с заданным телефоном.
     """
     # Получить текущую дату.
     today = date.today()
-    # Сформировать список номеров.
+    # Сформировать список работников.
     result = []
     for employee in staff:
         if today.year - employee.get('year', today.year) >= period:
             result.append(employee)
-    # Возвратить список выбранных номеров.
+    # Возвратить список выбранных работников.
     return result
 
 def save_workers(file_name, staff):
     """
-    Сохранить все номера в файл JSON.
+    Сохранить всех работников в файл JSON.
     """
     # Открыть файл с заданным именем для записи.
     with open(file_name, "w", encoding="utf-8") as fout:
@@ -81,7 +81,7 @@ def save_workers(file_name, staff):
 
 def load_workers(file_name):
     """
-    Загрузить все номера из файла JSON.
+    Загрузить всех работников из файла JSON.
     """
     # Открыть файл с заданным именем для чтения.
     with open(file_name, "r", encoding="utf-8") as fin:
@@ -91,7 +91,7 @@ def main():
     """
     Главная функция программы.
     """
-    # Список номеров.
+    # Список работников.
     workers = []
     # Организовать бесконечный цикл запроса команд.
     while True:
@@ -101,7 +101,7 @@ def main():
         if command == "exit":
             break
         elif command == "add":
-            # Запросить данные о номере.
+            # Запросить данные о работнике.
             worker = get_worker()
             # Добавить словарь в список.
             workers.append(worker)
@@ -109,23 +109,23 @@ def main():
             if len(workers) > 1:
                 workers.sort(key=lambda item: item.get('name', ''))
         elif command == "list":
-            # Отобразить все номера.
+            # Отобразить всех работников.
             display_workers(workers)
         elif command.startswith("select "):
-            # Разбить команду на части для выделения года.
+            # Разбить команду на части для выделения стажа.
             parts = command.split(maxsplit=1)
-            # Получить требуемый год.
+            # Получить требуемый стаж.
             period = int(parts[1])
-            # Выбрать номера с заданным годом.
+            # Выбрать работников с заданным стажем.
             selected = select_workers(workers, period)
-            # Отобразить выбранные номера.
+            # Отобразить выбранных работников.
             display_workers(selected)
         elif command.startswith("save "):
             # Разбить команду на части для выделения имени файла.
             parts = command.split(maxsplit=1)
             # Получить имя файла.
             file_name = parts[1]
-            # Сохранить данные в файл с заданным именемф.
+            # Сохранить данные в файл с заданным именем.
             save_workers(file_name, workers)
         elif command.startswith("load "):
             # Разбить команду на части для выделения имени файла.
