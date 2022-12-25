@@ -4,82 +4,74 @@ import json
 import sys
 from datetime import date
 
-
-def add():
-    # Запросить данные .
-    name = input("Фамилия, Имя ")
-    tel = input("Номер телефона ")
-    date = input("Дата рождения ")
-
+def get_worker():
+    """
+    Запросить данные о работнике.
+    """
+    name = input("Фамилия, Имя? ")
+    tel = input("Номер телефона? ")
+    date = int(input("Дата рождения? "))
     # Создать словарь.
-    spisok = {"name": name, "tel": tel, "date": date}
+    return {
+    'name': name,
+    'tel': post,
+    'date   ': year,
+    }
 
-    # Добавить словарь в список.
-    spisoks.append(spisok)
-    # Отсортировать список в случае необходимости.
-    if len(spisok) > 1:
-        spisoks.sort(key=lambda item: item.get("tel", ""))
-
-
-def list():
+def display_workers(staff):
+    """
+    Отобразить список номеров.
+    """
+    # Проверить, что список номеров не пуст.
+    if staff:
     # Заголовок таблицы.
-    line = "+-{}-+-{}-+-{}-+".format("-" * 30, "-" * 20, "-" * 14)
-    print(line)
-    print(
-        "| {:^30} | {:^20} | {:^14} |".format(
-            "Фамилия, Имя",
-            "Номер телефона",
-            "Дата рождения",
-        )
+        line = '+-{}-+-{}-+-{}-+-{}-+'.format(
+        '-' * 4,
+        '-' * 30,
+        '-' * 20,
+        '-' * 8
     )
     print(line)
-
-    # Вывести данные о всех людях.
-    for idx, product in enumerate(spisoks, 1):
-        print(
-            "| {:<30} | {:<20} | {:>14} |".format(
-                product.get("name", ""), product.get("tel", ""), product.get("date", 0)
-            )
-        )
-
+    print(
+    '| {:^4} | {:^30} | {:^20} | {:^8} |'.format(
+    "No",
+    "Ф.И.О.",
+    "Номер",
+    "Дата рожддения"
+    )
+    )
     print(line)
-
-
-def select():
-    parts = command.split(" ", maxsplit=2)
-    sel = parts[1]
-
-    count = 0
-    for spisok in spisoks:
-        if spisok.get("name") == sel:
-            count = "Дата рождения"
-            print("{:>4}: {}".format(count, spisok.get("date", "")))
-            print("Номер телефона", spisok.get("tel", ""))
-            print("Фамилия Имя", spisok.get("name", ""))
-
-    # Если счетчик равен 0, то рейсы не найдены.
-    if count == 0:
-        print("Люди не найден.")
-
+    # Вывести данные о всех номерах.
+    for idx, worker in enumerate(staff, 1):
+        print(
+            '| {:>4} | {:<30} | {:<20} | {:>8} |'.format(
+            idx,
+            worker.get('name', ''),
+            worker.get('tel', ''),
+            worker.get('date', 0)
+            )
+            )
+        print(line)
+    else:
+        print("Список номеров пуст.")
 
 def select_workers(staff, period):
     """
-    Выбрать людей с заданным номером.
+    Выбрать номер с заданным годом рождения.
     """
     # Получить текущую дату.
     today = date.today()
-    # Сформировать список работников.
+    # Сформировать список номеров.
     result = []
     for employee in staff:
-        if today.year - employee.get("year", today.year) >= period:
+        if today.year - employee.get('year', today.year) >= period:
             result.append(employee)
-    # Возвратить список выбранных работников.
+    # Возвратить список выбранных номеров.
     return result
-
 
 def save_workers(file_name, staff):
     """
-    Сохранить всех людей в файл JSON.
+    Сохранить все номера в файл JSON.
     """
     # Открыть файл с заданным именем для записи.
     with open(file_name, "w", encoding="utf-8") as fout:
@@ -87,44 +79,73 @@ def save_workers(file_name, staff):
         # Для поддержки кирилицы установим ensure_ascii=False
         json.dump(staff, fout, ensure_ascii=False, indent=4)
 
+def load_workers(file_name):
+    """
+    Загрузить все номера из файла JSON.
+    """
+    # Открыть файл с заданным именем для чтения.
+    with open(file_name, "r", encoding="utf-8") as fin:
+        return json.load(fin)
 
-def help():
-    # Вывести справку о работе с программой.
-    print("Список команд:\n")
-    print("add - добавить человека;")
-    print("list - вывести список людей;")
-    print("select <товар> - информация о человеке;")
-    print("help - отобразить справку;")
-    print("exit - завершить работу с программой.")
-
-    # Список .
-
-
-spisoks = []
-
-# Организовать бесконечный цикл запроса команд.
-while True:
-    # Запросить команду из терминала.
-    command = input(
-        ">>>>>>",
-    ).lower()
-
-    # Выполнить действие в соответствие с командой.
-    if command == "exit":
-        break
-
-    elif command == "add":
-        add()
-    elif command == "list":
-        list()
-
-    elif command.startswith("select "):
-        select()
-
-    elif command == "help":
-        help()
+def main():
+    """
+    Главная функция программы.
+    """
+    # Список номеров.
+    workers = []
+    # Организовать бесконечный цикл запроса команд.
+    while True:
+        # Запросить команду из терминала.
+        command = input(">>> ").lower()
+        # Выполнить действие в соответствие с командой.
+        if command == "exit":
+            break
+        elif command == "add":
+            # Запросить данные о номере.
+            worker = get_worker()
+            # Добавить словарь в список.
+            workers.append(worker)
+            # Отсортировать список в случае необходимости.
+            if len(workers) > 1:
+                workers.sort(key=lambda item: item.get('name', ''))
+        elif command == "list":
+            # Отобразить все номера.
+            display_workers(workers)
+        elif command.startswith("select "):
+            # Разбить команду на части для выделения года.
+            parts = command.split(maxsplit=1)
+            # Получить требуемый год.
+            period = int(parts[1])
+            # Выбрать номера с заданным годом.
+            selected = select_workers(workers, period)
+            # Отобразить выбранные номера.
+            display_workers(selected)
+        elif command.startswith("save "):
+            # Разбить команду на части для выделения имени файла.
+            parts = command.split(maxsplit=1)
+            # Получить имя файла.
+            file_name = parts[1]
+            # Сохранить данные в файл с заданным именемф.
+            save_workers(file_name, workers)
+        elif command.startswith("load "):
+            # Разбить команду на части для выделения имени файла.
+            parts = command.split(maxsplit=1)
+            # Получить имя файла.
+            file_name = parts[1]
+            # Сохранить данные в файл с заданным именем.
+            workers = load_workers(file_name)
+        elif command == 'help':
+            # Вывести справку о работе с программой.
+            print("Список команд:\n")
+            print("add - добавить работника;")
+            print("list - вывести список работников;")
+            print("select <стаж> - запросить работников со стажем;")
+            print("help - отобразить справку;")
+            print("load - загрузить данные из файла;")
+            print("save - сохранить данные в файл;")
+            print("exit - завершить работу с программой.")
     else:
-        print("Неизвестная команда {command}", file=sys.stderr)
-        
-if __name__ == "__main__":
+        print(f"Неизвестная команда {command}", file=sys.stderr)
+
+if __name__ == '__main__':
     main()
