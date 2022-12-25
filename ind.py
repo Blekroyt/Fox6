@@ -10,7 +10,7 @@ def get_worker():
     """
     name = input("Фамилия, Имя? ")
     tel = input("Номер? ")
-    year = int(input("Год рождения? "))
+    year = int(input("Дата рождения? "))
     # Создать словарь.
     return {
     'name': name,
